@@ -1,0 +1,61 @@
+# {{ ansible_managed }}
+# zsh version: {{ zsh_version }}
+
+# The following lines were added by compinstall
+zstyle :compinstall filename '/home/pwagstro/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+bindkey -e
+# End of lines configured by zsh-newuser-install
+
+export GOPATH="$HOME/go"
+
+# configure suport for powerline-go, make this conditional on
+# powerline-go being installed in the user GOPATH
+if [ -f $GOPATH/bin/powerline-go ]; then
+    zmodload zsh/datetime
+
+    function preexec() {
+        __TIMER=$EPOCHREALTIME
+    }
+
+    function powerline_precmd() {
+        local __ERRCODE=$?
+        local __DURATION=0
+
+        if [ -n $__TIMER ]; then
+            local __ERT=$EPOCHREALTIME
+            __DURATION="$(($__ERT - ${__TIMER:-__ERT}))"
+        fi
+        PS1="$($GOPATH/bin/powerline-go -colorize-hostname -modules duration -duration $__DURATION -error $__ERRCODE -shell zsh)"
+        PS1="$($GOPATH/bin/powerline-go -colorize-hostname -error $__ERRCODE -duration $__DURATION -shell zsh)"
+        unset __TIMER
+    }
+
+    function install_powerline_precmd() {
+        for s in "${precmd_functions[@]}"; do
+            if [ "$s" = "powerline_precmd" ]; then
+                return
+            fi
+        done
+        precmd_functions+=(powerline_precmd)
+    }
+
+    if [ "$TERM" != "linux" ]; then
+        install_powerline_precmd
+    fi
+fi
+
+# Shell Commands
+alias ls="ls --color=auto"
+
+# Other Shell Defaults
+export EDITOR="vim"
+export GPG_TTY=$(tty)
+

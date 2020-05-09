@@ -1,0 +1,34 @@
+---
+- name: Install zsh
+  apt:
+    name: zsh
+    state: present
+    update_cache: true
+  become: yes
+
+- name: Check zsh version
+  shell: "set -o pipefail; zsh --version | cut -d ' ' -f2"
+  args:
+    executable: /bin/bash
+  register: zsh_register_version
+  check_mode: no
+  changed_when: false
+  tags: configure
+
+- name: Set zsh_version variable
+  set_fact:
+    zsh_version: "{{ zsh_register_version.stdout }}"
+
+- name: Write .zshrc configuration
+  template:
+    src: zshrc.j2
+    dest: "{{ zsh_config }}"
+    owner: "{{ zsh_user }}"
+    group: "{{ zsh_user_group }}"
+    backup: yes
+
+- name: Set zsh as default shell
+  user:
+    name: "{{ zsh_user }}"
+    shell: /usr/bin/zsh
+  become: true
