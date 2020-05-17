@@ -53,7 +53,7 @@ if [ -f $GOPATH/bin/powerline-go ]; then
 fi
 
 # Shell Commands
-alias ls="ls --color=auto"
+{% if ansible_os_family == 'Darwin' %}alias ls="gls --color=auto"{% else %}alias ls="ls --color=auto"{% endif %}
 
 # Other Shell Defaults
 export EDITOR="vim"

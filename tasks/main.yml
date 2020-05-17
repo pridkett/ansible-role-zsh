@@ -1,10 +1,17 @@
 ---
-- name: Install zsh
+- name: Install zsh via Homebrew
+  homebrew:
+    name: zsh
+    state: present
+  when: ansible_facts['os_family'] == "Darwin"
+
+- name: Install zsh via apt
   apt:
     name: zsh
     state: present
     update_cache: true
   become: yes
+  when: ansible_facts['os_family'] == "Debian"
 
 - name: Check zsh version
   shell: "set -o pipefail; zsh --version | cut -d ' ' -f2"
@@ -30,5 +37,5 @@
 - name: Set zsh as default shell
   user:
     name: "{{ zsh_user }}"
-    shell: /usr/bin/zsh
+    shell: "{{ zsh_binary }}"
   become: true
