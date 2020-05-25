@@ -59,3 +59,8 @@ fi
 export EDITOR="vim"
 export GPG_TTY=$(tty)
 
+# load additional configuration files
+for file in $(find "${HOME}/.zshrc.d" -type f); do
+  source $file;
+done
+

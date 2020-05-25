@@ -26,6 +26,11 @@
   set_fact:
     zsh_version: "{{ zsh_register_version.stdout }}"
 
+- name: Create .zshrc.d directory
+  file:
+    path: "~{{ zsh_user }}/.zshrc.d"
+    state: directory
+
 - name: Write .zshrc configuration
   template:
     src: zshrc.j2
