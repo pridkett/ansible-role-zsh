@@ -1,5 +1,6 @@
 ---
 # vars file for zsh
+zsh_user: "{{ ansible_user }}"
 zsh_user_group: "{% if ansible_os_family == 'Darwin' %}staff{% else %}{{ zsh_user }}{% endif %}"
 zsh_config: "~{{ zsh_user }}/.zshrc"
 zsh_binary: "{% if ansible_os_family == 'Darwin' %}/usr/local/bin/zsh{% else %}/usr/bin/zsh{% endif %}"

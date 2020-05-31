@@ -44,3 +44,4 @@
     name: "{{ zsh_user }}"
     shell: "{{ zsh_binary }}"
   become: true
+  when: zsh.set_default_shell is defined and zsh.set_default_shell == True
